@@ -102,17 +102,14 @@ void initOpenCL(int N)
     printCLError(err, "GET DEVICE NAME");
     printf("%sDEVICE INFO: %s\n%s", lines, deviceInfo, lines);
 
-    size_t dims;
-    err = clGetDeviceInfo(device, CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS, sizeof(size_t), &dims, NULL);
-    printCLError(err, "GET DEVICE MAX WORK DIMS");
-    printf("MAX DIMS: %d\n", dims);
 
     size_t sizet;
 
     err = clGetDeviceInfo(device, CL_DEVICE_MAX_WORK_ITEM_SIZES, 0, NULL, &sizet);
     printCLError(err, "GET DEVICE MAX WORK ITEMS");
+    size_t dims = sizet / sizeof(size_t);
 
-    size_t *maxperDim = new size_t[sizet / sizeof(size_t)];
+    size_t *maxperDim = new size_t[dims];
     err = clGetDeviceInfo(device, CL_DEVICE_MAX_WORK_ITEM_SIZES, sizet, maxperDim, NULL);
     printCLError(err, "GET DEVICE MAX WORK ITEMS");
 
