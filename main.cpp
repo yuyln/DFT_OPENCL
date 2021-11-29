@@ -29,16 +29,16 @@ int main()
     readBuffer(X, &bufferX, sizeof(Complex) * N);
 
 
-    std::chrono::high_resolution_clock::time_point t3 = std::chrono::high_resolution_clock::now();
+    // std::chrono::high_resolution_clock::time_point t3 = std::chrono::high_resolution_clock::now();
 
-    for(int i = 0; i < N; i++)
-    {
-        DFT(x, X, N, i);
-    }
-    
-    std::chrono::high_resolution_clock::time_point t4 = std::chrono::high_resolution_clock::now();
-    double dur1 = std::chrono::duration_cast<std::chrono::duration<double>>(t4 - t3).count();
-    printf("CPU: %f\n", dur1);
+    // for(int i = 0; i < N; i++)
+    // {
+    //     DFT(x, X, N, i);
+    // }
+
+    // std::chrono::high_resolution_clock::time_point t4 = std::chrono::high_resolution_clock::now();
+    // double dur1 = std::chrono::duration_cast<std::chrono::duration<double>>(t4 - t3).count();
+    // printf("CPU: %f\n", dur1);
 
     FILE *out = fopen("out.out", "w");
     for(int i = 0; i < N - 1; i++)
