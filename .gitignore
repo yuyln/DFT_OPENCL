@@ -1,0 +1,6 @@
+*.py
+*.out
+*.in
+.vscode
+DFT
+*.sh
