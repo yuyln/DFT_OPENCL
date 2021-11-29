@@ -73,9 +73,6 @@ void initOpenCL(int N)
         devicetype = CL_DEVICE_TYPE_CPU;
     }
 
-    *totalWork = N;
-    *workPerGroup = gcd(N, 1024);
-    printf("%d\n", *workPerGroup);
     int err;
     err = clGetPlatformIDs(2, plat, NULL);
     printCLError(err, "GET PLATAFORM ID");
@@ -102,8 +99,30 @@ void initOpenCL(int N)
     deviceInfo = new char[deviceInfoSize];
 
     err = clGetDeviceInfo(device, CL_DEVICE_NAME, deviceInfoSize, deviceInfo, NULL);
-    printCLError(err, "GET DEVICE INFO");
+    printCLError(err, "GET DEVICE NAME");
     printf("%sDEVICE INFO: %s\n%s", lines, deviceInfo, lines);
+
+    size_t dims;
+    err = clGetDeviceInfo(device, CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS, sizeof(size_t), &dims, NULL);
+    printCLError(err, "GET DEVICE MAX WORK DIMS");
+    printf("MAX DIMS: %d\n", dims);
+
+    size_t sizet;
+
+    err = clGetDeviceInfo(device, CL_DEVICE_MAX_WORK_ITEM_SIZES, 0, NULL, &sizet);
+    printCLError(err, "GET DEVICE MAX WORK ITEMS");
+
+    size_t *maxperDim = new size_t[sizet / sizeof(size_t)];
+    err = clGetDeviceInfo(device, CL_DEVICE_MAX_WORK_ITEM_SIZES, sizet, maxperDim, NULL);
+    printCLError(err, "GET DEVICE MAX WORK ITEMS");
+
+    printf("MAX PER GROUP: (");
+    for(int i = 0; i < dims - 1; i++)
+    {
+        printf("%d, ", maxperDim[i]);
+    }
+    printf("%d)\n", maxperDim[dims - 1]);
+
 
     context = clCreateContext(NULL, 1, &device, NULL, NULL, &err);
     printCLError(err, "CREATE CONTEXT");
@@ -132,6 +151,10 @@ void initOpenCL(int N)
     kDFT = clCreateKernel(program, "DFT", &err);
     printCLError(err, "CREATE DFT KERNEL");
 
+    size_t aux = gcd(N, (int)maxperDim[0]);
+    printf("%d\n", aux);
+    *workPerGroup = aux;
+    *totalWork = N;
 }
 
 void setDFTXParam(Complex* c, cl_mem* buffer, size_t size)

@@ -58,9 +58,10 @@ void printCLError(int err, const char* local)
 {
     if(err != CL_SUCCESS)
     {
-        printf("%s", lines);
-        printf("ERROR %s: %d\n", local, err);
-        printf("%s", lines);
+        fprintf(stderr, "%s", lines);
+        fprintf(stderr, "ERROR %s: %d\n", local, err);
+        fprintf(stderr, "%s", lines);
+        exit(err);
     }
 }
 
