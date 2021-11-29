@@ -3,6 +3,8 @@
 #include <openclvars.hpp>
 #include <funcs.tpp>
 
+//g++ main.cpp ./src/* -Ofast -L./OpenCL/lib/ -I./headers/ -I./OpenCL/include/ -lOpenCL -o DFT
+
 int main()
 {
     int N = findNFile("in.in");
